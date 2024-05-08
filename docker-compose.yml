@@ -1,0 +1,29 @@
+version: '2.21'
+
+services:
+  redis_scheduler:
+    image: redis:latest
+    command: redis-server
+    restart: always
+    volumes:
+      - ./redis:/data
+    ports:
+      - 6378:6378
+    networks:
+      - redis
+
+  bot_scheduler:
+    build: .
+    command:  sh -c "python3 main.py"
+    restart: always
+    volumes:
+      - .:/usr/app/src
+    networks:
+      - redis
+
+networks:
+  redis:
+    driver: bridge
+
+  postgres:
+    driver: bridge
